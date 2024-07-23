@@ -59,4 +59,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 Thanks to the open-source community and resources that supported the development of this project.
 
 ## Project Demo
-You can view and interact with the project online here: [Wokwi Project Demo](https://wokwi.com/).
+You can view and interact with the project online here: [Wokwi Project Demo]([https://wokwi.com/](https://wokwi.com/projects/404193549640837121)).
