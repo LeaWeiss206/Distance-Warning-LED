@@ -15,10 +15,7 @@ Speed Warning LED is a project that utilizes an ESP32 microcontroller to monitor
 - Compares the measured speed with a predefined threshold.
 - Activates an LED when the speed exceeds the threshold.
 - Serial output for debugging and monitoring speed values.
-
-## Circuit Diagram
-*(Include your circuit diagram image here)*
-
+  
 ## Code Overview
 The project code is written in Arduino C++. It performs the following functions:
 
