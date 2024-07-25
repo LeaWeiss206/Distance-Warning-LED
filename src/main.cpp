@@ -1,50 +1,71 @@
 #include <Arduino.h>
-const int trigPin = 5; // פין Trig של HC-SR04
-const int echoPin = 18; // פין Echo של HC-SR04
-const int ledPin = 2; // פין ה-LED
-const int speedThreshold = 50; // ערך סף למהירות (במטרים לשנייה)
+#include <WiFi.h>
+#include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 
+
+// הגדרות החיישן וה-WiFi
+const int trigPin = 5;
+const int echoPin = 18;
+const int ledPin = 2;
+const int dangerousDistance = 10;
+const int forbiddenDistance = 20;
+const char* ssid = "Wokwi-GUEST";
+const char* password = "";
+
+
+
+float distance = 0;
 
 void setup() {
-  pinMode(trigPin, OUTPUT); // הגדר את פין Trig כקלט
-  pinMode(echoPin, INPUT);  // הגדר את פין Echo כקלט
-  pinMode(ledPin, OUTPUT);  // הגדר את פין ה-LED כהוצאה
-   Serial.begin(9600);
-  Serial.println("Hello, ESP32!");
+  Serial.begin(9600);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+
+  // התחברות לרשת ה-WiFi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi...");
+  }
+  Serial.println("Connected to WiFi");
 }
 
 void loop() {
-  // שלח פולס קצר כדי להפעיל את החיישן
+  // שליחת פולס קצר להפעלת החיישן
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
   digitalWrite(trigPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  // מדוד את הזמן שהאולטרה-סוניק לוקח לחזור
+  // מדידת הזמן שלוקח לפולס לחזור
   long duration = pulseIn(echoPin, HIGH);
+  
+  // חישוב המרחק בסנטימטרים
+  distance = duration * 0.0344 / 2;
 
-  // המר את הזמן למטרים
-  float distance = duration * 0.0344 / 2; // המר לחישוב מטרים
-
-  // חישוב מהירות על פי מרחק
-  // נניח שנעשית קריאה כל 1 שנייה
-  float speed = distance; // אם היית מדוד מרחק מדי פעם, תוכל לחשב מהירות על פי שינוי מרחק בזמן
-
+  // הצגת הערך שהתקבל
   Serial.print("Distance: ");
   Serial.print(distance);
-  Serial.print(" meters");
-  Serial.print(" Speed: ");
-  Serial.print(speed);
-  Serial.println(" meters/second");
+  Serial.println(" cm");
 
-  // השווה את המהירות לערך הסף והפעל את ה-LED אם המהירות גבוהה
-  if (speed > speedThreshold) {
-    digitalWrite(ledPin, HIGH); // הפעל את ה-LED
+  // externalDistance = distance;
+  // Serial.print("Speed: ");
+  // Serial.print(distance);
+  // Serial.println(" cm/s");
+
+  // השוואת המרחק לערך הסף והפעלת ה-LED אם המרחק גדול
+   if (distance <= forbiddenDistance) {
+    digitalWrite(ledPin, HIGH); // הפעלת ה-LED
+    if(distance <= dangerousDistance)
+    Serial.println("Break");
+
   } else {
-    digitalWrite(ledPin, LOW);  // כבה את ה-LED
+    digitalWrite(ledPin, LOW); // כיבוי ה-LED
   }
 
-  delay(1000); // המתן שנייה לפני קריאה נוספת
+  delay(1000); // המתנה של שנייה לפני קריאה נוספת
 }

@@ -20,7 +20,13 @@
       "rotate": 180,
       "attrs": { "value": "1" }
     },
-    { "type": "wokwi-hc-sr04", "id": "ultrasonic1", "top": 222.3, "left": -253.7, "attrs": {} }
+    {
+      "type": "wokwi-hc-sr04",
+      "id": "ultrasonic1",
+      "top": 222.3,
+      "left": -253.7,
+      "attrs": { "distance": "2" }
+    }
   ],
   "connections": [
     [ "esp:TX", "$serialMonitor:RX", "", [] ],
@@ -33,5 +39,7 @@
     [ "ultrasonic1:ECHO", "esp:18", "blue", [ "v-134.4", "h229.6" ] ],
     [ "ultrasonic1:GND", "esp:GND.2", "black", [ "v0" ] ]
   ],
-  "dependencies": {}
+  "dependencies": {
+    "scripts": ["sensorControl.js"]
+  }
 }
